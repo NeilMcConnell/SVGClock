@@ -8,7 +8,7 @@
 
 
   <g id="clockFace">
-    <circle cx="0" cy="0" r="97" stroke="black" stroke-width="4" fill="none" />
+    <circle cx="0" cy="0" r="97" stroke="black" stroke-width="4" fill="white" />
   </g>
 
   <g id="hours" transform="rotate(225 0 0)">
