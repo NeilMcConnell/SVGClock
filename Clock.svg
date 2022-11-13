@@ -5,21 +5,47 @@
    <line x1="0" y1="0" x2="0" y2="-80" stroke="black"/>
    </g>
 
+  <g id="minutes" transform="rotate(135 0 0)">
+    <line x1="0" y1="0" x2="0" y2="-80" stroke="black"/>
+  </g>
+
+
+  <g id="hours" transform="rotate(225 0 0)">
+    <line x1="0" y1="0" x2="0" y2="-80" stroke="black"/>
+  </g>
 
 
 
 
 
 
-   <script>
+
+
+
+  <script>
   <![CDATA[
-const seconds=document.getElementById('seconds');
+const secondsElement=document.getElementById('seconds');
+const minutesElement=document.getElementById('minutes');
+const hoursElement=document.getElementById('hours');
 
 function UpdateFromTime(){
 let now = new Date();
 
 //seconds.setAttribute("transform", "rotate(200 0 0)");
-seconds.transform.baseVal.getItem(0).setRotate(now.getSeconds()*6,0,0);
+
+
+let seconds = now.getSeconds();
+let minutes = now.getMinutes();
+let hours = now.getHours();
+
+let secondsRotation = seconds*6;
+let minutesRotation = minutes * 6 + seconds * 0.1;
+let hoursRotation = hours * 30 + minutes * 0.5
+
+
+secondsElement.transform.baseVal.getItem(0).setRotate(secondsRotation,0,0);
+minutesElement.transform.baseVal.getItem(0).setRotate(minutesRotation,0,0);
+hoursElement.transform.baseVal.getItem(0).setRotate(hoursRotation,0,0);
 }
 
 UpdateFromTime();
