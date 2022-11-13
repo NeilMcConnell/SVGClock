@@ -47,11 +47,22 @@ let secondsRotation = seconds*6;
 let minutesRotation = minutes * 6 + seconds * 0.1;
 let hoursRotation = hours * 30 + minutes * 0.5
 
+let smoothFrames = 6;
+let smoothMs = 60;
 
-secondsElement.transform.baseVal.getItem(0).setRotate(secondsRotation,0,0);
+secondsElement.transform.baseVal.getItem(0).setRotate(secondsRotation-6 + 6/smoothFrames,0,0);
+for (let smoothFrame = 2; smoothFrame <= smoothFrames; ++ smoothFrame)
+{
+setTimeout(()=>{secondsElement.transform.baseVal.getItem(0).setRotate(secondsRotation-6 + (6/smoothFrames*smoothFrame),0,0);}  , smoothMs * smoothFrame/smoothFrames);
+}
+
 minutesElement.transform.baseVal.getItem(0).setRotate(minutesRotation,0,0);
 hoursElement.transform.baseVal.getItem(0).setRotate(hoursRotation,0,0);
 }
+
+
+
+
 
 function DrawClockFace()
 {
@@ -73,12 +84,7 @@ function DrawClockFace()
     newLine.setAttribute("shape-rendering", "geometricPrecision");
     clockFace.appendChild(newLine);
   }
-
-
-
 }
-
-
 
 
 DrawClockFace()
