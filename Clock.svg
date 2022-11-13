@@ -1,8 +1,9 @@
 <svg viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
   <circle cx="0" cy="0" r="97" stroke="black" stroke-width="4" fill="none" />
+  <g id="clockFace"></g>
 
    <g id="seconds" transform="rotate(45 0 0)">
-   <line x1="0" y1="0" x2="0" y2="-80" stroke="black"/>
+   <line x1="0" y1="0" x2="0" y2="-80" stroke="black" stroke-width="0.5" />
    </g>
 
   <g id="minutes" transform="rotate(135 0 0)">
@@ -48,6 +49,35 @@ minutesElement.transform.baseVal.getItem(0).setRotate(minutesRotation,0,0);
 hoursElement.transform.baseVal.getItem(0).setRotate(hoursRotation,0,0);
 }
 
+function DrawClockFace()
+{
+  let clockFace = document.getElementById('clockFace');
+  let l1 = 93;
+  let l2 = 89.5;
+
+  for(let position = 0; position < 60; ++position){
+    var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+    let degrees = (Math.PI*3/2) + (position*Math.PI/30);
+    let width = (position%5 == 0) ? 2 : 0.5;
+    
+    newLine.setAttribute("x1", Math.cos(degrees)*l1);
+    newLine.setAttribute("y1", Math.sin(degrees)*l1);
+    newLine.setAttribute("x2", Math.cos(degrees)*l2);
+    newLine.setAttribute("y2", Math.sin(degrees)*l2);
+    newLine.setAttribute("stroke", "black");
+    newLine.setAttribute("stroke-width", width);
+    newLine.setAttribute("shape-rendering", "geometricPrecision");
+    clockFace.appendChild(newLine);
+  }
+
+
+
+}
+
+
+
+
+DrawClockFace()
 UpdateFromTime();
 setInterval(UpdateFromTime, 1000);
 
