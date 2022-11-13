@@ -12,7 +12,7 @@
   </g>
 
   <g id="hours" transform="rotate(225 0 0)">
-    <polygon points="1.5,6 -1.5,6 -1.5,-60 0,-63 1.5,-60" fill="black"/>
+    <polygon points="1.5,6 -1.5,6 -1.5,-52 0,-55 1.5,-52" fill="black"/>
   </g>
   <g id="minutes" transform="rotate(135 0 0)">
     <!--line x1="0" y1="0" x2="0" y2="-80" stroke="black"/-->
