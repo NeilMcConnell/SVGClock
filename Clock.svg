@@ -11,10 +11,20 @@
 
 
 
-   <script><![CDATA[
-var seconds=document.getElementById('seconds');
+   <script>
+  <![CDATA[
+const seconds=document.getElementById('seconds');
+
+function UpdateFromTime(){
+let now = new Date();
+
 //seconds.setAttribute("transform", "rotate(200 0 0)");
-seconds.transform.baseVal.getItem(0).setRotate(300,0,0);
+seconds.transform.baseVal.getItem(0).setRotate(now.getSeconds()*6,0,0);
+}
+
+UpdateFromTime();
+setInterval(UpdateFromTime, 1000);
+
 ]]></script>
 
 </svg>
