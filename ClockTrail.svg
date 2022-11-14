@@ -10,9 +10,9 @@
   <defs>
 
     <linearGradient id="TrailGradient" x1="0.1" y1="0.5"  x2="1"  y2="0.1">
-      <stop offset="0%" stop-color="red" stop-opacity="0" />
-      <stop offset="50%" stop-color="red" stop-opacity="0.5" />
-      <stop offset="100%" stop-color="red"  stop-opacity="1" />
+      <stop offset="0%" stop-color="black" stop-opacity="0" />
+      <stop offset="0%" stop-color="black" stop-opacity="0" />
+      <stop offset="100%" stop-color="black"  stop-opacity="0.5" />
     </linearGradient>
   </defs>
 
@@ -62,16 +62,15 @@ const trailGradientStop1 = trailGradient.children[1];
 const trailGradientStop2 = trailGradient.children[2];
 
 
-
-console.log(trailGradientStop1.getAttribute("offset"));
-
-
+const smoothFrames = 4;
+const smoothMs = 60;
+const fadeTime = 200;
+const fadeTimePerFrame = 30;
 
 
 
 
 function UpdateFromTime(){
-return
 let now = new Date();
 
 let seconds = now.getSeconds();
@@ -82,16 +81,19 @@ let secondsRotation = seconds*6;
 let minutesRotation = minutes * 6 + seconds * 0.1;
 let hoursRotation = hours * 30 + minutes * 0.5
 
-let smoothFrames = 4;
-let smoothMs = 60;
-
 secondsElement.transform.baseVal.getItem(0).setRotate(secondsRotation-6 + 6/smoothFrames,0,0);
 AdjustTrail(1/smoothFrames);
 for (let smoothFrame = 2; smoothFrame <= smoothFrames; ++ smoothFrame)
 {
 setTimeout(()=>{
   secondsElement.transform.baseVal.getItem(0).setRotate(secondsRotation-6 + (6/smoothFrames*smoothFrame),0,0);
+  if (smoothFrame < smoothFrames){
   AdjustTrail(smoothFrame/smoothFrames);
+  }
+  else
+  {
+    FadeTrail(1)
+  }
   }  , smoothMs * smoothFrame/smoothFrames);
 }
 
@@ -101,9 +103,18 @@ hoursElement.transform.baseVal.getItem(0).setRotate(hoursRotation,0,0);
 
 
 function AdjustTrail(trailLength){
+  trailGradientStop1.setAttribute("offset", 1-trailLength)
 }
 
-
+function FadeTrail(length)
+{
+  AdjustTrail(length);
+  if (length > 0)
+  {
+    let nextLength = Math.max(0, length - (fadeTimePerFrame/fadeTime));
+    setTimeout(() =>  FadeTrail(nextLength), fadeTimePerFrame)
+  }
+}
 
 
 function DrawClockFace()
