@@ -1,0 +1,169 @@
+<svg viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
+
+  <style>
+    .clockText{
+    font: 28px arial sans-serif;
+    }
+  </style>
+
+
+  <defs>
+
+    <linearGradient id="TrailGradient" x1="0.1" y1="0.5"  x2="1"  y2="0.1">
+      <stop offset="0%" stop-color="black" stop-opacity="0" />
+      <stop offset="0%" stop-color="black" stop-opacity="0" />
+      <stop offset="100%" stop-color="black"  stop-opacity="0.5" />
+    </linearGradient>
+  </defs>
+
+
+  <g id="clockFace">
+    <circle cx="0" cy="0" r="97" stroke="black" stroke-width="4" fill="white" />
+  </g>
+
+  <g id="hours" transform="rotate(225 0 0)">
+    <polygon points="1.5,6 -1.5,6 -1.5,-52 0,-55 1.5,-52" fill="black"/>
+  </g>
+  <g id="minutes" transform="rotate(135 0 0)">
+    <!--line x1="0" y1="0" x2="0" y2="-80" stroke="black"/-->
+    <polygon points="1.25,6 -1.25,6 -1.25,-75 0,-78 1.25,-75" fill="black"/>
+  </g>
+
+
+
+
+  <g id="seconds" transform="rotate(0 0 0)">
+    
+    
+    <path d="M 0 0 L -7.32 -69.62   L 0 -70 Z" fill="url(#TrailGradient)"/>
+    
+    
+    <circle cx="0" cy="0" r="2" fill="black" />
+    <line x1="0" y1="10" x2="0" y2="-70" stroke="black" stroke-width="0.5" />
+    <line x1="0" y1="5" x2="0" y2="20" stroke="black" stroke-width="1.5" />
+
+
+    <!--circle cx="0" cy="0" r="100" fill="url(#Gradient2)" /-->
+
+
+
+  </g>
+
+
+
+  <script>
+  <![CDATA[
+const secondsElement=document.getElementById('seconds');
+const minutesElement=document.getElementById('minutes');
+const hoursElement=document.getElementById('hours');
+const trailGradient = document.getElementById('TrailGradient');
+const trailGradientStop0 = trailGradient.children[0];
+const trailGradientStop1 = trailGradient.children[1];
+const trailGradientStop2 = trailGradient.children[2];
+
+
+const smoothFrames = 4;
+const smoothMs = 60;
+const fadeTime = 200;
+const fadeTimePerFrame = 30;
+
+
+
+
+function UpdateFromTime(){
+let now = new Date();
+
+let seconds = now.getSeconds();
+let minutes = now.getMinutes();
+let hours = now.getHours();
+
+let secondsRotation = seconds*6;
+let minutesRotation = minutes * 6 + seconds * 0.1;
+let hoursRotation = hours * 30 + minutes * 0.5
+
+secondsElement.transform.baseVal.getItem(0).setRotate(secondsRotation-6 + 6/smoothFrames,0,0);
+AdjustTrail(1/smoothFrames);
+for (let smoothFrame = 2; smoothFrame <= smoothFrames; ++ smoothFrame)
+{
+setTimeout(()=>{
+  secondsElement.transform.baseVal.getItem(0).setRotate(secondsRotation-6 + (6/smoothFrames*smoothFrame),0,0);
+  if (smoothFrame < smoothFrames){
+  AdjustTrail(smoothFrame/smoothFrames);
+  }
+  else
+  {
+    FadeTrail(1)
+  }
+  }  , smoothMs * smoothFrame/smoothFrames);
+}
+
+minutesElement.transform.baseVal.getItem(0).setRotate(minutesRotation,0,0);
+hoursElement.transform.baseVal.getItem(0).setRotate(hoursRotation,0,0);
+}
+
+
+function AdjustTrail(trailLength){
+  trailGradientStop1.setAttribute("offset", 1-trailLength)
+}
+
+function FadeTrail(length)
+{
+  AdjustTrail(length);
+  if (length > 0)
+  {
+    let nextLength = Math.max(0, length - (fadeTimePerFrame/fadeTime));
+    setTimeout(() =>  FadeTrail(nextLength), fadeTimePerFrame)
+  }
+}
+
+
+function DrawClockFace()
+{
+  let clockFace = document.getElementById('clockFace');
+  let l1 = 93;
+  let l2 = 89.5;
+
+  for(let position = 0; position < 60; ++position){
+    var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+    let degrees = (Math.PI*3/2) + (position*Math.PI/30);
+    let width = (position%5 == 0) ? 2 : 0.5;
+    
+    newLine.setAttribute("x1", Math.cos(degrees)*l1);
+    newLine.setAttribute("y1", Math.sin(degrees)*l1);
+    newLine.setAttribute("x2", Math.cos(degrees)*l2);
+    newLine.setAttribute("y2", Math.sin(degrees)*l2);
+    newLine.setAttribute("stroke", "black");
+    newLine.setAttribute("stroke-width", width);
+    newLine.setAttribute("shape-rendering", "geometricPrecision");
+    clockFace.appendChild(newLine);
+  }
+
+  for(let hour = 1; hour <= 12; ++hour){
+    var hourText = document.createElementNS('http://www.w3.org/2000/svg','text');
+    
+    let degrees = (Math.PI*3/2) + (hour*Math.PI/6);
+    let textRadius = 75;
+    let centerY = 9.25;
+    
+
+    hourText.setAttribute("x", Math.cos(degrees)*textRadius);
+    hourText.setAttribute("y", Math.sin(degrees)*textRadius + centerY);
+    hourText.setAttribute("text-anchor", "middle");
+    hourText.classList.add("clockText");
+    
+    var textNode = document.createTextNode(hour.toString());
+    hourText.appendChild(textNode);
+    
+
+    clockFace.appendChild(hourText);
+}  
+}
+
+
+DrawClockFace()
+UpdateFromTime();
+setInterval(UpdateFromTime, 1000);
+
+]]></script>
+
+</svg>
